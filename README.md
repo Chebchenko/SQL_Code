@@ -103,4 +103,67 @@ ALTER TABLE marketing_data2
 ALTER COLUMN conversions TYPE INT;
 ```
 
+### **Handling Zeros and NULLs**
+**Identifying Zeros**
+```sql
+SELECT COUNT(earnings)
+FROM marketing_data2
+WHERE earnings = 0;
+
+SELECT COUNT(costs)
+FROM marketing_data2
+WHERE costs = 0;
+
+SELECT COUNT(*)
+FROM marketing_data2
+WHERE earnings = 0 AND costs = 0;
+```
+**Identifying NULLs**
+```sql
+SELECT COUNT(*)
+FROM marketing_data2
+WHERE earnings IS NULL;
+
+SELECT COUNT(*)
+FROM marketing_data2
+WHERE costs IS NULL;
+
+SELECT COUNT(*)
+FROM marketing_data2
+WHERE earnings IS NULL AND costs IS NULL;
+```
+**Updating NULLs to Zeros**
+```sql
+UPDATE marketing_data2
+SET impressions = 0
+WHERE impressions IS NULL;
+
+UPDATE marketing_data2
+SET ad_clicks = 0
+WHERE ad_clicks IS NULL;
+
+UPDATE marketing_data2
+SET costs = 0
+WHERE costs IS NULL;
+
+UPDATE marketing_data2
+SET sessions = 0
+WHERE sessions IS NULL;
+
+UPDATE marketing_data2
+SET conversions = 0
+WHERE conversions IS NULL;
+
+UPDATE marketing_data2
+SET earnings = 0
+WHERE earnings IS NULL;
+```
+
+**Deleting Rows Where Both Costs and Earnings Are Zero**
+```sql
+DELETE FROM marketing_data2
+WHERE costs = 0 AND earnings = 0;
+```
+
+
 
