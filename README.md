@@ -3,7 +3,7 @@
 
 ## **Data Setup**
 
-### **Creating the Marketing Data Table**
+### **Create the Marketing Data Table**
 ```sql
 CREATE TABLE marketing_data (
     partition_date DATE,
@@ -17,12 +17,13 @@ CREATE TABLE marketing_data (
     conversions INTEGER,
     earnings NUMERIC(10, 2)
 );
+```
 
---Import data from CSV file
+Import data from CSV file
 
-### **Creating the Marketing Data Table**
+### **Create Backup Table**
 ```sql
 CREATE TABLE marketing_data2
 AS (SELECT * FROM marketing_data);
-
+```
 
