@@ -165,5 +165,128 @@ DELETE FROM marketing_data2
 WHERE costs = 0 AND earnings = 0;
 ```
 
+## **Exploratory Data Analysis (EDA)**
+### **Total Costs, Earnings, and ROAS**
+```sql
+SELECT 
+    ROUND(SUM(costs), 2) AS total_cost
+FROM marketing_data2;
+
+SELECT 
+    ROUND(SUM(earnings), 2) AS total_earnings
+FROM marketing_data2;
+
+SELECT 
+    ROUND(
+        CASE 
+            WHEN SUM(costs) = 0 THEN 0
+            ELSE (SUM(earnings) / SUM(costs)) * 100
+        END, 2
+    ) AS total_ROAS_percentage
+FROM marketing_data2;
+```
+
+### **Total Costs and Earnings Grouped by Month**
+```sql
+SELECT 
+    DATE_TRUNC('month', partition_date) AS month,
+    ROUND(SUM(costs), 2) AS total_costs,
+    ROUND(SUM(earnings), 2) AS total_earnings
+FROM marketing_data2
+WHERE partition_date BETWEEN '2023-01-01' AND '2023-12-31'
+GROUP BY DATE_TRUNC('month', partition_date)
+ORDER BY month;
+```
+
+### **Identify & Delete data from 2024**
+```sql
+SELECT *
+FROM marketing_data2
+WHERE partition_date = '2024-01-01';
+
+DELETE FROM marketing_data2
+WHERE partition_date = '2024-01-01';
+```
+
+### **ROAS for Each Marketing Channel**
+```sql
+SELECT 
+    mkt_channel,
+    SUM(earnings) AS total_earnings,
+    SUM(costs) AS total_costs,
+    ROUND(
+        CASE 
+            WHEN SUM(costs) = 0 THEN 0
+            ELSE (SUM(earnings) / SUM(costs)) * 100
+        END, 2
+    ) AS ROAS_percentage
+FROM marketing_data2
+GROUP BY mkt_channel
+ORDER BY ROAS_percentage DESC;
+```
+
+### **ROAS for Each Traffic Source**
+```sql
+SELECT 
+    traffic_source,
+    SUM(earnings) AS total_earnings,
+    SUM(costs) AS total_costs,
+    ROUND(
+        CASE 
+            WHEN SUM(costs) = 0 THEN 0
+            ELSE (SUM(earnings) / SUM(costs)) * 100
+        END, 2
+    ) AS ROAS_percentage
+FROM marketing_data2
+GROUP BY traffic_source
+ORDER BY ROAS_percentage DESC;
+```
+
+### **ROAS for Combinations of Marketing Channel and Traffic Source**
+```sql
+SELECT 
+    mkt_channel,
+    traffic_source,
+    SUM(earnings) AS total_earnings,
+    SUM(costs) AS total_costs,
+    ROUND(
+        CASE 
+            WHEN SUM(costs) = 0 THEN 0
+            ELSE (SUM(earnings) / SUM(costs)) * 100
+        END, 2
+    ) AS ROAS_percentage
+FROM marketing_data2
+GROUP BY mkt_channel, traffic_source
+ORDER BY ROAS_percentage DESC;
+```
+
+### **Monthly ROAS Variation by Marketing Channel**
+```sql
+SELECT 
+    DATE_TRUNC('month', partition_date) AS month,
+    mkt_channel,
+    SUM(earnings) AS total_earnings,
+    SUM(costs) AS total_costs,
+    (SUM(earnings) / NULLIF(SUM(costs), 0)) AS roas
+FROM marketing_data2
+GROUP BY month, mkt_channel
+ORDER BY month, mkt_channel;
+```
+
+### **Monthly ROAS Variation by Traffic Source**
+```sql
+SELECT 
+    DATE_TRUNC('month', partition_date) AS month,
+    traffic_source,
+    SUM(earnings) AS total_earnings,
+    SUM(costs) AS total_costs,
+    (SUM(earnings) / NULLIF(SUM(costs), 0)) AS roas
+FROM marketing_data2
+GROUP BY month, traffic_source
+ORDER BY month, traffic_source;
+```
+
+
+
 
 
