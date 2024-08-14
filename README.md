@@ -38,6 +38,52 @@ ORDER BY
 ```
 
 
+## **Question 2**
+Write a SQL query to provide the total earnings for each marketing channel for the month of January. Earnings should be attributed to the first visit_date where the session_id is the same, i.e. if you have 2 session_ids over 2 different days, the earnings should be attributed to the first session.
+
+**Answer**
+```sql
+WITH first_visits AS (
+    SELECT
+        session_id,
+        MIN(visit_date) AS first_visit_date
+    FROM
+        user_visits
+    WHERE
+        visit_date BETWEEN '2021-01-01' AND '2021-01-31'
+    GROUP BY
+        session_id
+),
+visit_with_channel AS (
+    SELECT DISTINCT
+        fv.session_id,
+        fv.first_visit_date,
+        uv.marketing_channel
+    FROM
+        first_visits fv
+    JOIN
+        user_visits uv ON fv.session_id = uv.session_id AND fv.first_visit_date = uv.visit_date
+),
+earnings_attribution AS (
+    SELECT DISTINCT
+        vwc.session_id,
+        vwc.marketing_channel,
+        lo.earnings
+    FROM
+        visit_with_channel vwc
+    JOIN
+        leadouts lo ON vwc.session_id = lo.session_id
+)
+SELECT
+    ea.marketing_channel,
+    SUM(ea.earnings) AS total_earnings
+FROM
+    earnings_attribution ea
+GROUP BY
+    ea.marketing_channel
+ORDER BY
+    total_earnings DESC;
+```
 
 
 
