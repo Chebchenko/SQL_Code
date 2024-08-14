@@ -1,8 +1,6 @@
 # **SQL challenge**
 
 ## **Question 1**
-
-**Question 1**
 Write a query that would provide the earnings per session (earnings/sessions) metric for every day of the week to calculate the best performing day of the week in terms of this metric. Round the metric to 2.
 
 **Answer**
