@@ -34,7 +34,7 @@ FROM
 LEFT JOIN
     earnings_by_day ebd ON sbd.dow = ebd.dow  
 ORDER BY
-    sbd.dow;  -- Order by day of the week
+    sbd.dow;  
 ```
 
 
