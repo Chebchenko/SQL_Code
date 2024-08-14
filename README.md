@@ -25,9 +25,9 @@ earnings_by_day AS (
         EXTRACT(DOW FROM lo.visit_date)  
 )
 SELECT
-    sbd.dow,  -- Day of the week
-    sbd.sessions,  -- Total sessions for that day
-    ebd.earnings,  -- Total earnings for that day
+    sbd.dow,  
+    sbd.sessions,  
+    ebd.earnings,  
     ROUND(ebd.earnings / sbd.sessions, 2) AS eps  
 FROM
     sessions_by_day sbd
