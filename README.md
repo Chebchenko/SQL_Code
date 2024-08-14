@@ -1,3 +1,43 @@
+# **SQL challenge**
+
+## **Question 1**
+```sql
+WITH sessions_by_day AS (
+    SELECT
+        EXTRACT(DOW FROM visit_date) AS dow,  -- Extract day of the week
+        COUNT(DISTINCT session_id) AS sessions  -- Count distinct sessions per day
+    FROM 
+        user_visits
+    GROUP BY 
+        EXTRACT(DOW FROM visit_date)  -- Group by day of the week
+),
+
+earnings_by_day AS (
+    SELECT
+        EXTRACT(DOW FROM lo.visit_date) AS dow,  -- Extract day of the week
+        SUM(lo.earnings) AS earnings  -- Sum of earnings for each day
+    FROM 
+        leadouts lo
+    GROUP BY 
+        EXTRACT(DOW FROM lo.visit_date)  -- Group by day of the week
+)
+SELECT
+    sbd.dow,  -- Day of the week
+    sbd.sessions,  -- Total sessions for that day
+    ebd.earnings,  -- Total earnings for that day
+    ROUND(ebd.earnings::NUMERIC / sbd.sessions, 2) AS eps  -- Earnings per session, rounded to 2 decimals
+FROM
+    sessions_by_day sbd
+LEFT JOIN
+    earnings_by_day ebd ON sbd.dow = ebd.dow  -- Join on day of the week
+ORDER BY
+    sbd.dow;  -- Order by day of the week
+```
+
+
+
+
+
 # **SQL Queries for the Analytics challenge**
 
 
