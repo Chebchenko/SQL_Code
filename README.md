@@ -28,7 +28,7 @@ SELECT
     sbd.dow,  -- Day of the week
     sbd.sessions,  -- Total sessions for that day
     ebd.earnings,  -- Total earnings for that day
-    ROUND(ebd.earnings::NUMERIC / sbd.sessions, 2) AS eps  
+    ROUND(ebd.earnings / sbd.sessions, 2) AS eps  
 FROM
     sessions_by_day sbd
 LEFT JOIN
